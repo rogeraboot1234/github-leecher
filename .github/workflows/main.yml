@@ -91,7 +91,17 @@ jobs:
           echo "file_extension=${FILENAME_EXT}" >> $GITHUB_OUTPUT
           echo "final_archive_name=${FINAL_ARCHIVE_FILENAME}" >> $GITHUB_OUTPUT
 
-      
+      - name: Rename downloaded file
+        id: rename_file
+        run: |
+          ARCHIVE_NAME_PREFIX="${{ steps.get_filename.outputs.archive_base_name }}"
+          DOWNLOADED_FILE="${{ steps.get_filename.outputs.downloaded_file_name }}"
+          EXT="${{ steps.get_filename.outputs.file_extension }}"
+
+          NEW_ORIGINAL_FILENAME="$ARCHIVE_NAME_PREFIX"
+          if [[ -n "$EXT" ]]; then
+            NEW_ORIGINAL_FILENAME="${ARCHIVE_NAME_PREFIX}.${EXT}"
+          fi
 
           mv "$DOWNLOADED_FILE" "$NEW_ORIGINAL_FILENAME"
           echo "Renamed downloaded file to: $NEW_ORIGINAL_FILENAME"
@@ -103,7 +113,6 @@ jobs:
           NEW_ORIGINAL_FILENAME="${{ steps.rename_file.outputs.new_original_filename }}"
 
           # ساخت آرشیو چند تکه رمزدار ۷z (هر تکه حدود ۸۵ مگابایت)
-          7z a -p"${{ github.event.inputs.zip_password }}" -mhe=on -mx=3 -v85m "${ARCHIVE_NAME_PREFIX}.7z" "$NEW_ORIGINAL_FILENAME"
 
       - name: Remove original downloaded file
         run: |
