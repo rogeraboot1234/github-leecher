@@ -113,7 +113,7 @@ jobs:
           NEW_ORIGINAL_FILENAME="${{ steps.rename_file.outputs.new_original_filename }}"
 
           # ساخت آرشیو چند تکه رمزدار ۷z (هر تکه حدود ۸۵ مگابایت)
-          7z a -p"${{ github.event.inputs.zip_password }}" -mhe=on -mx=3 -v1000m "${ARCHIVE_NAME_PREFIX}.7z" "$NEW_ORIGINAL_FILENAME"
+          7z a -p -mhe=on -mx=3 -v95m "${ARCHIVE_NAME_PREFIX}.7z" "$NEW_ORIGINAL_FILENAME"
       - name: Remove original downloaded file
         run: |
           FILE="${{ steps.rename_file.outputs.new_original_filename }}"
